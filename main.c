@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
   Vector2 shipRight = {shipLeft.x - 30, shipLeft.y};
 
   Image triangle = LoadImage("../resources/textures/white-triangle.png");
+  ImageResize(&triangle, triangle.width / 6, triangle.height / 6);
   Texture2D ship = LoadTextureFromImage(triangle);
   UnloadImage(triangle);
 
