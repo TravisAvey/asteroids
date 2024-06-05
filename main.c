@@ -16,7 +16,9 @@ int main(int argc, char **argv) {
   Texture2D ship = LoadTextureFromImage(triangle);
   UnloadImage(triangle);
 
-  SetTargetFPS(120);
+  SetTargetFPS(60);
+  DrawTexture(ship, width / 2 - ship.width / 2, height / 2 - ship.height / 2,
+              WHITE);
 
   while (!WindowShouldClose()) {
     if (IsKeyDown(KEY_W)) {
@@ -49,8 +51,7 @@ int main(int argc, char **argv) {
     ClearBackground(BLACK);
 
     // DrawTriangleLines(shipNose, shipLeft, shipRight, WHITE);
-    DrawTexture(ship, width / 2 - ship.width / 2, height / 2 - ship.height / 2,
-                WHITE);
+    DrawTexture(ship, shipNose.x, shipNose.y, WHITE);
 
     EndDrawing();
   }
