@@ -7,14 +7,14 @@ int main(int argc, char **argv) {
 
   InitWindow(width, height, "Asteroids");
 
-  Vector2 shipNose = {(float)width / 2, (float)height / 2};
-  Vector2 shipLeft = {shipNose.x + 15, shipNose.y + 15};
-  Vector2 shipRight = {shipLeft.x - 30, shipLeft.y};
+  Vector2 shipVec = {(float)width / 2, (float)height / 2};
 
   Image triangle = LoadImage("../resources/textures/white-triangle.png");
   ImageResize(&triangle, triangle.width / 6, triangle.height / 6);
   Texture2D ship = LoadTextureFromImage(triangle);
   UnloadImage(triangle);
+
+  int shipRotation = 0;
 
   SetTargetFPS(60);
   DrawTexture(ship, width / 2 - ship.width / 2, height / 2 - ship.height / 2,
@@ -24,34 +24,25 @@ int main(int argc, char **argv) {
     if (IsKeyDown(KEY_W)) {
 
       // add force to ship -y direction
-      shipNose.y -= 2;
-      shipLeft.y -= 2;
-      shipRight.y -= 2;
+      shipVec.y -= 2;
     }
     if (IsKeyDown(KEY_S)) {
       // add force to ship +y direction
-      shipNose.y += 2;
-      shipLeft.y += 2;
-      shipRight.y += 2;
+      shipVec.y += 2;
     }
     if (IsKeyDown(KEY_A)) {
-      // add force to ship -x direction
-      shipNose.x -= 2;
-      shipLeft.x -= 2;
-      shipRight.x -= 2;
+      // turn ship
+      shipRotation -= 5;
     }
     if (IsKeyDown(KEY_D)) {
-      // add force to ship +x direction
-      shipNose.x += 2;
-      shipLeft.x += 2;
-      shipRight.x += 2;
+      shipRotation += 5;
     }
     BeginDrawing();
 
     ClearBackground(BLACK);
 
-    // DrawTriangleLines(shipNose, shipLeft, shipRight, WHITE);
-    DrawTexture(ship, shipNose.x, shipNose.y, WHITE);
+    // DrawTexture(ship, shipVec.x, shipVec.y, WHITE);
+    DrawTextureEx(ship, shipVec, (float)shipRotation, 1.0, WHITE);
 
     EndDrawing();
   }
