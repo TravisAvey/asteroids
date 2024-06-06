@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <raymath.h>
 
 const int width = 1000;
 const int height = 1000;
@@ -32,16 +33,20 @@ int main(int argc, char **argv) {
     }
     if (IsKeyDown(KEY_A)) {
       // turn ship
-      shipRotation -= 5;
+      shipRotation--;
     }
     if (IsKeyDown(KEY_D)) {
-      shipRotation += 5;
+      shipRotation++;
     }
+
     BeginDrawing();
 
     ClearBackground(BLACK);
 
-    // DrawTexture(ship, shipVec.x, shipVec.y, WHITE);
+    // this makes it rotate around the top left corner
+    // and glitches about when turning with a/d
+    // Vector2 rot = Vector2Rotate(shipVec, (float)shipRotation);
+
     DrawTextureEx(ship, shipVec, (float)shipRotation, 1.0, WHITE);
 
     EndDrawing();
