@@ -4,50 +4,74 @@
 const int width = 1000;
 const int height = 1000;
 
+// Type for the player
+typedef struct Player {
+  Vector2 location;
+  Vector2 speed;
+  float acceleration;
+  float rotation;
+} Player;
+
+// Type for the asteroids
+typedef struct Asteroid {
+
+} Asteroid;
+
+// static objects
+static Player player = {0};
+
 int main(int argc, char **argv) {
 
   InitWindow(width, height, "Asteroids");
 
-  Vector2 shipVec = {(float)width / 2, (float)height / 2};
+  // init player
+  player.location = (Vector2){(float)width / 2, (float)height / 2};
+  player.speed = (Vector2){0, 0};
+  player.acceleration = 0.0;
+  player.rotation = 0.0;
 
   Image triangle = LoadImage("../resources/textures/white-triangle.png");
   ImageResize(&triangle, triangle.width / 6, triangle.height / 6);
   Texture2D ship = LoadTextureFromImage(triangle);
   UnloadImage(triangle);
 
-  int shipRotation = 0;
-
   SetTargetFPS(60);
   DrawTexture(ship, width / 2 - ship.width / 2, height / 2 - ship.height / 2,
               WHITE);
 
   while (!WindowShouldClose()) {
-    if (IsKeyDown(KEY_W)) {
+    if (IsKeyDown(KEY_A))
+      player.rotation--;
+    if (IsKeyDown(KEY_D))
+      player.rotation++;
 
-      // add force to ship -y direction
-      shipVec.y -= 2;
+    player.speed.x = sin(player.rotation * DEG2RAD) * 3.0f;
+    player.speed.y = cos(player.rotation * DEG2RAD) * 3.0f;
+
+    if (IsKeyDown(KEY_W)) {
+      if (player.acceleration < 1)
+        player.acceleration += 0.04f;
+    } else {
+      if (player.acceleration > 0)
+        player.acceleration -= 0.04f;
+      else if (player.acceleration < 0)
+        player.acceleration = 0.0f;
     }
+
     if (IsKeyDown(KEY_S)) {
-      // add force to ship +y direction
-      shipVec.y += 2;
+      if (player.acceleration > 0)
+        player.acceleration -= 0.04f;
+      else if (player.acceleration < 0)
+        player.acceleration = 0;
     }
-    if (IsKeyDown(KEY_A)) {
-      // turn ship
-      shipRotation--;
-    }
-    if (IsKeyDown(KEY_D)) {
-      shipRotation++;
-    }
+    player.location.x += (player.speed.x * player.acceleration);
+    player.location.y -= (player.speed.y * player.acceleration);
 
     BeginDrawing();
 
     ClearBackground(BLACK);
 
-    // this makes it rotate around the top left corner
-    // and glitches about when turning with a/d
-    // Vector2 rot = Vector2Rotate(shipVec, (float)shipRotation);
-
-    DrawTextureEx(ship, shipVec, (float)shipRotation, 1.0, WHITE);
+    DrawTextureEx(ship, player.location, player.rotation, 1.0, WHITE);
 
     EndDrawing();
   }
