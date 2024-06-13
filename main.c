@@ -17,6 +17,11 @@ typedef struct Asteroid {
 
 } Asteroid;
 
+// TODO: add in asteroid objects: drawing/texture and an array of them
+//
+// TODO: asteroid speed/velocity direction..
+// on start and after being hit with a laser
+//
 // TODO: probably want an array of lasers versus unlimited
 // will help with performance
 //
@@ -45,18 +50,23 @@ static bool gameWon = false;
 
 void InitGame();
 void UpdatePlayer();
+void CheckStatus();
 
 int main(int argc, char **argv) {
   InitGame();
 
   while (!WindowShouldClose()) {
-    UpdatePlayer();
-
+    CheckStatus();
     BeginDrawing();
+    UpdatePlayer();
 
     ClearBackground(BLACK);
 
     DrawTextureEx(ship, player.location, player.rotation, 1.0, WHITE);
+
+    if (gamePause)
+      DrawText("Game Paused", width / 2 - MeasureText("Game Paused", 28) / 2,
+               height / 2, 28, GRAY);
 
     EndDrawing();
   }
@@ -114,4 +124,12 @@ void UpdatePlayer() {
   }
   player.location.x += (player.speed.x * player.acceleration);
   player.location.y -= (player.speed.y * player.acceleration);
+}
+
+void CheckStatus() {
+
+  if (IsKeyPressed('P')) {
+
+    gamePause = !gamePause;
+  }
 }
