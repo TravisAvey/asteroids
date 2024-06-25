@@ -38,6 +38,8 @@ typedef struct Asteroid {
 // TODO:check each of the games statuses and bounds each frame
 //
 //
+// TODO: the ship texture isn't centered for rotation and movement
+//
 
 // static objects
 static Player player = {0};
@@ -92,9 +94,14 @@ void InitGame() {
   ship = LoadTextureFromImage(triangle);
   UnloadImage(triangle);
 
+  Rectangle shipRect = {0, 0, ship.width, ship.height};
+  Vector2 shipCenter = {(float)ship.width / 2, (float)ship.height / 2};
+
   SetTargetFPS(60);
-  DrawTexture(ship, width / 2 - ship.width / 2, height / 2 - ship.height / 2,
-              WHITE);
+  DrawTexturePro(ship, shipRect,
+                 (Rectangle){player.location.x, player.location.y,
+                             shipRect.width, shipRect.height},
+                 shipCenter, 0, WHITE);
 }
 
 void UpdatePlayer() {
@@ -103,12 +110,12 @@ void UpdatePlayer() {
   if (IsKeyDown(KEY_D))
     player.rotation++;
 
-  player.speed.x = sin(player.rotation * DEG2RAD) * 3.0f;
-  player.speed.y = cos(player.rotation * DEG2RAD) * 3.0f;
+  player.speed.x = sin(player.rotation * DEG2RAD) * 4.0f;
+  player.speed.y = cos(player.rotation * DEG2RAD) * 4.0f;
 
   if (IsKeyDown(KEY_W)) {
     if (player.acceleration < 1)
-      player.acceleration += 0.04f;
+      player.acceleration += 0.09f;
   } else {
     if (player.acceleration > 0)
       player.acceleration -= 0.04f;
